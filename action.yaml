@@ -17,4 +17,5 @@ runs:
       else
         echo "Repository structure is not valid"
         echo "::set-output name=structure_valid::false"
+        exit 1
       fi
