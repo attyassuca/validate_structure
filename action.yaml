@@ -13,9 +13,20 @@ runs:
       # For example, check for necessary directories and files
       if [ -d "src" ] && [ -d "src/services" ]; then
         echo "Repository structure is valid"
-        echo "::set-output name=structure_valid::true"
+        folders=(src/services/*-service)
+
+        if [ ${#folders[@]} -eq 0 ]; then
+          echo "All service folder must have the -service suffix"
+        else
+          for folder in "${folders[@]}"; do
+            if [ ! -d "$folder" ]; then
+              echo "Not all the services folders in the directory have the -service suffix "
+              exit 1
+            fi
+          done
+          echo "All folders in the directory have the suffix $suffix"
+        fi
       else
         echo "Repository structure is not valid"
-        echo "::set-output name=structure_valid::false"
         exit 1
       fi
