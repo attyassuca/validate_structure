@@ -13,20 +13,25 @@ runs:
       # For example, check for necessary directories and files
       if [ -d "src" ] && [ -d "src/services" ]; then
         echo "Repository structure is valid"
-        folders=(src/services/*-service)
+        dir="src/services"
 
-        if [ ${#folders[@]} -eq 0 ]; then
-          echo "All service folder must have the -service suffix"
-          exit 1
-        else
-          for folder in "${folders[@]}"; do
-            if [ ! -d "$folder" ]; then
-              echo "Not all the services folders in the directory have the -service suffix "
+        # Set the suffix to check
+        suffix="-service"
+
+        # Loop through all directories in the specified directory
+        for d in "$dir"/*; do
+        # Check if it is a directory
+          if [ -d "$d" ]; then
+             # Get the directory name without the path
+             dirname=${d##*/}
+             # Check if the directory name ends with the specified suffix
+             if [[ $dirname != *"$suffix" ]]; then
+              # If it does not, print an error message and exit with a non-zero status code
+              echo "Error: Directory $dirname does not have the suffix $suffix"
               exit 1
             fi
-          done
-          echo "All folders in the directory have the suffix -service"
-        fi
+         fi
+       done
       else
         echo "Repository structure is not valid"
         exit 1
